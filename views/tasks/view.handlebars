@@ -1,0 +1,11 @@
+<h1>Tarefa: {{task.title}}</h1>
+<form action="/" method="GET">
+    <input type="hidden" name="id" value="{{task.id}}">
+  <div class="form-control">
+    <label for="title">Título: {{task.title}}</label>
+  </div>
+  <div class="form-control">
+    <label for="description">Descrição: {{task.description}}</label>
+  </div>
+  <input type="submit" value="Voltar">
+</form>
