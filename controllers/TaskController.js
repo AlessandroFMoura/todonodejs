@@ -1,6 +1,8 @@
 const Task = require('../models/Task');
+const CreateTaskService = require('../service/CreateTaskService');
+const TaskFactory = require('../factory/TaskFactory')
 
-module.exports = class TaskController {
+class TaskController {
     static createTask(req, res) {
         res.render('tasks/create')
     }
@@ -8,12 +10,10 @@ module.exports = class TaskController {
     static async createTaskSave(req, res) {
         const { body: { title, description } } = req
 
-        const task = {
-            title,
-            description,
-            done: false
-        }
-        await Task.create(task)
+        const taskFactory = TaskFactory()
+        const service = new CreateTaskService({ taskFactory, taskModel: Task })
+
+        await service.execute({ title, description })
 
         res.redirect('/tasks')
     };
@@ -44,7 +44,7 @@ module.exports = class TaskController {
             description: description,
         }
 
-        await Task.update(task, { where: {id: id} });
+        await Task.update(task, { where: { id: id } });
 
         res.redirect('/tasks')
     }
@@ -53,7 +53,7 @@ module.exports = class TaskController {
         const { body: { id, done } } = req
 
         const task = {
-            done: done === '0'? true : false
+            done: done === '0' ? true : false
         }
         await Task.update(task, { where: { id: id } })
 
@@ -75,5 +75,7 @@ module.exports = class TaskController {
 
         res.render('tasks/all', { tasks })
     };
-    
+
 }
+
+module.exports = TaskController
