@@ -1,6 +1,7 @@
 const Task = require('../models/Task');
 const CreateTaskService = require('../service/CreateTaskService');
 const TaskFactory = require('../factory/TaskFactory')
+const UpdateTaskPostService = require('../service/UpdateTaskPostService')
 
 class TaskController {
     static createTask(req, res) {
@@ -39,13 +40,11 @@ class TaskController {
     static async updateTaskPost(req, res) {
         const { body: { title, description, id } } = req
 
-        const task = {
-            title: title,
-            description: description,
-        }
-
-        await Task.update(task, { where: { id: id } });
-
+        const taskFactory = TaskFactory()
+        const service = new UpdateTaskPostService({ updateFactory: taskFactory, taskModel: Task })
+       
+        await service.execute({ title, description, id })
+        
         res.redirect('/tasks')
     }
 
